@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-resource.js"></script>
+	<title>Welcome</title>
+	</head>
+
+
+<body ng-app="myapp" ng-controller="mc" >
+	<h3 >Enter number  of participants </h3>
+	<select ng-model="participants">
+	<option  selected>Select</option>
+	<option ng-repeat="x in getNumber(maxparticipants) track by $index ">{{x+1}}</option>
+	</select>
+	
+	<div style="display: block;" ng-repeat="y in getNumber(participants) track by $index" class="formfield">
+           <label >{{$index==0?"Team Leader:":"Other Team Members:"}}</label><br>
+           <input type="text" name="Contingent{{$index+1}}" placeholder="Contingent{{$index+1}}" required ng-model="names[$index]"/>
+    </div>
+    	   <input type="submit" value="Register" name="submit" ng-click="print1()">
+</body>
+	<script >
+            var myapp=angular.module("myapp",['ngResource']);
+			myapp.controller("mc",function($scope,$resource)
+			{
+			$scope.maxparticipants=20;
+			$scope.participants=0;
+			$scope.p=[];
+			$scope.names=[];
+		$scope.print1=function()
+		{
+			for(var i=0;i<$scope.participants;i++)
+			{
+				console.log($scope.names[i]);
+			}
+			var Submit = $resource("http://192.168.2.10:8000/register/");
+      		var postdata = $scope.names;
+      		console.log(angular.toJson(postdata));
+      	}
+
+		$scope.getNumber = function(participants) 
+		{
+			///	console.log(participants);
+			$scope.p=[];
+			for(var i=0;i<participants;i++)
+			{ 
+				$scope.p[parseInt(i)]=i;
+			}
+		return $scope.p;
+     
+		}});
+		
+	</script>
+        
+</html>
+
